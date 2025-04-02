@@ -133,7 +133,7 @@ public class SocialMediaController {
         if(message != null)
             ctx.json(mapper.writeValueAsString(message));
         else
-            ctx.json("{}");
+            ctx.json("");
     }
     /**
      * 
