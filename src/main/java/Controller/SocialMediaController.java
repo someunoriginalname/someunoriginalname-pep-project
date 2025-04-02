@@ -130,7 +130,10 @@ public class SocialMediaController {
         Integer message_id = Integer.parseInt(ctx.pathParam("message_id"));
         //int message_id = Integer.valueOf(ctx.pathParam("message_id"));
         Message message = messageService.removeMessage(message_id);
-        ctx.json(mapper.writeValueAsString(message));
+        if(message != null)
+            ctx.json(mapper.writeValueAsString(message));
+        else
+            ctx.json("{}");
     }
     /**
      * 
