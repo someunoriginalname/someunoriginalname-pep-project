@@ -36,10 +36,10 @@ public class SocialMediaController {
         app.post("/login", this::postUserLogin);
         app.post("/messages", this::postNewMessage);
         app.get("/messages", this::getListAllMessages);
-        app.get("/messages/{message_id}", this::getMessageByID);
-        app.delete("/messages/{message_id}", this::deleteDeleteMessage);
-        app.patch("/messages/{message_id}", this::patchUpdateMessage);
-        app.get("/accounts/{account_id}/messages", this::getMessagesByUser);
+        app.get("/messages/{message_id}", ctx -> getMessageByID(ctx));
+        app.delete("/messages/{message_id}", ctx -> deleteDeleteMessage(ctx));
+        app.patch("/messages/{message_id}", ctx -> patchUpdateMessage(ctx));
+        app.get("/accounts/{account_id}/messages", ctx -> getMessagesByUser(ctx));
         return app;
     }
 
@@ -139,8 +139,10 @@ public class SocialMediaController {
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         int message_id = Integer.valueOf(ctx.pathParam("message_id"));
-        Message message = mapper.readValue(ctx.body(), Message.class);
+        String message_text = mapper.readValue(ctx.body(), String.class);
+        Message message = new Message();
         message.setMessage_id(message_id);
+        message.setMessage_text(message_text);
         message = messageService.changeMessage(message);
         if(message != null){
             ctx.json(mapper.writeValueAsString(message));
