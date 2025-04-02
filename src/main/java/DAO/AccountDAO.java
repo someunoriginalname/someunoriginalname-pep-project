@@ -15,7 +15,7 @@ public class AccountDAO {
             ps.setString(2, account.getPassword());
             ResultSet rs = ps.executeQuery(sql);
             while(rs.next()){
-                return account;
+                return new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
