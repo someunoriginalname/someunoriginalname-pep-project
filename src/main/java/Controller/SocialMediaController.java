@@ -147,10 +147,10 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Integer message_id = Integer.parseInt(ctx.pathParam("message_id"));
         //int message_id = Integer.valueOf(ctx.pathParam("message_id"));
-        String message_text = ctx.body();
-        Message message = new Message();
+        //String message_text = ctx.body();
+        Message message = mapper.readValue(ctx.body(), Message.class);
         message.setMessage_id(message_id);
-        message.setMessage_text(message_text);
+        //message.setMessage_text(message_text);
         message = messageService.changeMessage(message);
         if(message != null){
             ctx.json(mapper.writeValueAsString(message));
