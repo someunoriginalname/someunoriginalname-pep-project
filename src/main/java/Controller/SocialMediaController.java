@@ -36,22 +36,10 @@ public class SocialMediaController {
         app.post("/login", this::postUserLogin);
         app.post("/messages", this::postNewMessage);
         app.get("/messages", this::getListAllMessages);
-        app.get("/messages/{message_id}", ctx -> {
-            int message_id = Integer.valueOf(ctx.pathParam("message_id"));
-            getMessageByID(message_id, ctx);
-        });
-        app.delete("/messages/{message_id}", ctx -> {
-            int message_id = Integer.valueOf(ctx.pathParam("message_id"));
-            deleteDeleteMessage(message_id, ctx);
-        });
-        app.patch("/messages/{message_id}", ctx -> {
-            int message_id = Integer.valueOf(ctx.pathParam("message_id"));
-            patchUpdateMessage(message_id, ctx);
-        });
-        app.get("/accounts/{account_id}/messages", ctx -> {
-            int account_id = Integer.valueOf(ctx.pathParam("account_id"));
-            getMessagesByUser(account_id, ctx);
-        });
+        app.get("/messages/{message_id}", this::getMessageByID);
+        app.delete("/messages/{message_id}", this::deleteDeleteMessage);
+        app.patch("/messages/{message_id}", this::patchUpdateMessage);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByUser);
         return app;
     }
 
@@ -126,9 +114,9 @@ public class SocialMediaController {
      * @param ctx The target message id.
      * @throws JsonProcessingException
      */
-    private void getMessageByID(int message_id, Context ctx) throws JsonProcessingException{
+    private void getMessageByID(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
-        // int message_id = Integer.valueOf(ctx.pathParam("message_id"));
+        Integer message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.messageById(message_id);
         ctx.json(mapper.writeValueAsString(message));
     }
@@ -137,8 +125,9 @@ public class SocialMediaController {
      * @param ctx The id of the message to be deleted.
      * @throws JsonProcessingException
      */
-    private void deleteDeleteMessage(int message_id, Context ctx) throws JsonProcessingException{
+    private void deleteDeleteMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
+        Integer message_id = Integer.parseInt(ctx.pathParam("message_id"));
         //int message_id = Integer.valueOf(ctx.pathParam("message_id"));
         Message message = messageService.removeMessage(message_id);
         ctx.json(mapper.writeValueAsString(message));
@@ -148,8 +137,9 @@ public class SocialMediaController {
      * @param ctx The contents of the updated message.
      * @throws JsonProcessingException
      */
-    private void patchUpdateMessage(int message_id, Context ctx) throws JsonProcessingException{
+    private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
+        Integer message_id = Integer.parseInt(ctx.pathParam("message_id"));
         //int message_id = Integer.valueOf(ctx.pathParam("message_id"));
         String message_text = mapper.readValue(ctx.body(), String.class);
         Message message = new Message();
@@ -163,9 +153,10 @@ public class SocialMediaController {
             ctx.json(400);
         }
     }
-    private void getMessagesByUser(int account_id, Context ctx) throws JsonProcessingException{
+    private void getMessagesByUser(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         List<Message> Messages = new ArrayList<>();
+        Integer account_id = Integer.parseInt(ctx.pathParam("account_id"));
         // int user_id = Integer.valueOf(ctx.pathParam("account_id"));
         Messages = messageService.messagesByUser(account_id);
         ctx.json(mapper.writeValueAsString(Messages));
