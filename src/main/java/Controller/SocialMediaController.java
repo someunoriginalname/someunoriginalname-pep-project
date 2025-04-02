@@ -156,7 +156,7 @@ public class SocialMediaController {
             ctx.json(mapper.writeValueAsString(message));
         }
         else{
-            ctx.json(400);
+            ctx.status(400);
         }
     }
     private void getMessagesByUser(Context ctx) throws JsonProcessingException{
