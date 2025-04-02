@@ -116,7 +116,7 @@ public class SocialMediaController {
      */
     private void getMessageByID(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
-        int message_id = mapper.readValue(ctx.body(), int.class);
+        int message_id = Integer.valueOf(ctx.pathParam("message_id"));
         Message message = messageService.messageById(message_id);
         ctx.json(mapper.writeValueAsString(message));
     }
@@ -127,7 +127,7 @@ public class SocialMediaController {
      */
     private void deleteDeleteMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
-        int message_id = mapper.readValue(ctx.body(), int.class);
+        int message_id = Integer.valueOf(ctx.pathParam("message_id"));
         Message message = messageService.removeMessage(message_id);
         ctx.json(mapper.writeValueAsString(message));
     }
@@ -138,7 +138,9 @@ public class SocialMediaController {
      */
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
+        int message_id = Integer.valueOf(ctx.pathParam("message_id"));
         Message message = mapper.readValue(ctx.body(), Message.class);
+        message.setMessage_id(message_id);
         message = messageService.changeMessage(message);
         if(message != null){
             ctx.json(mapper.writeValueAsString(message));
@@ -150,7 +152,7 @@ public class SocialMediaController {
     private void getMessagesByUser(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         List<Message> Messages = new ArrayList<>();
-        int user_id = mapper.readValue(ctx.body(), int.class);
+        int user_id = Integer.valueOf(ctx.pathParam("user_id"));
         Messages = messageService.messagesByUser(user_id);
         ctx.json(mapper.writeValueAsString(Messages));
     }
