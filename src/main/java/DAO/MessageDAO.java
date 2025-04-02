@@ -58,6 +58,7 @@ public class MessageDAO {
         try{
             String sql = "SELECT * FROM message WHERE message_id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, message_id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Message message = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), rs. getString("message_text"), rs.getLong("time_posted_epoch"));
@@ -72,7 +73,7 @@ public class MessageDAO {
         Connection connection = ConnectionUtil.getConnection();
         try{
             Message message = getMessage(message_id);
-            String sql = "DELETE * FROM message WHERE message_id = ?";
+            String sql = "DELETE FROM message WHERE message_id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, message_id);
             ps.execute();
